@@ -7,6 +7,10 @@ export const register = async (req: Request, res: Response) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
 
+        if (!name || !email || !password || !confirmPassword) {
+            return res.status(409).json({ message: 'Please fill in missing fields.' });
+        }
+
         if (password != confirmPassword) {
             return res.status(409).json({ message: 'Password does not match.' });
         }
