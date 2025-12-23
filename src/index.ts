@@ -6,6 +6,10 @@ import path from 'path'
 import cors from 'cors'
 import session from 'express-session'
 
+// Routes
+import authRoutes from './modules/auth/auth.route'
+// End routes 
+
 const app: Express = express();
 const PORT = 3000;
 
@@ -39,6 +43,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
+// routes
+app.use('/api/auth', authRoutes)
+
 
 app.get('/api/items', async (req: Request, res: Response) => {
     try {
@@ -70,13 +77,13 @@ app.post('/api/items', upload.single('image'), async (req: Request, res: Respons
             return res.status(409).json({ message: 'Image is required' });
         }
 
-        await prisma.lostItem.create({
-            data: {
-                name: itemName,
-                description,
-                image: file.filename
-            }
-        })
+        // await prisma.lostItem.create({
+        //     data: {
+        //         name: itemName,
+        //         description,
+        //         image: file.filename
+        //     }
+        // })
 
         res.status(201).json({ message: 'lost item posted successfully' });
     } catch (error) {
