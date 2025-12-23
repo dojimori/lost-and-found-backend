@@ -10,6 +10,7 @@ import cors from 'cors'
 const app: Express = express();
 const PORT = 3000;
 
+app.use('/public', express.static('uploads'))
 app.use(cors())
 
 const storage = multer.diskStorage({
@@ -26,11 +27,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 
-app.get('/api/items', (req: Request, res: Response) => {
+app.get('/api/items', async (req: Request, res: Response) => {
     try {
         // res.status(200).json({ tempDB });
 
-        res.status(200).json({});
+        const lostItems = await prisma.lostItem.findMany();
+
+        res.status(200).json({ lostItems });
 
     } catch (error) {
         res.status(500).json({ message: 'something went wrong' })
