@@ -11,7 +11,10 @@ const app: Express = express();
 const PORT = 3000;
 
 app.use('/public', express.static('uploads'))
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}))
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
