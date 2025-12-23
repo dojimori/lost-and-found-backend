@@ -5,7 +5,11 @@ import bcrypt from 'bcryptjs'
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, confirmPassword } = req.body;
+
+        if (password != confirmPassword) {
+            return res.status(409).json({ message: 'Password does not match.' });
+        }
 
         // check if the email already existed
         const user = await prisma.user.findUnique({
