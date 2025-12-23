@@ -10,12 +10,13 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  // id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  id       Int        @id @default(autoincrement())
   email    String     @unique
   name     String
   password String
@@ -23,10 +24,10 @@ model User {
 }
 
 model LostItem {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          Int    @id @default(autoincrement())
   name        String
   description String
   image       String
   founder     User   @relation(fields: [founderId], references: [id])
-  founderId   String @db.ObjectId
+  founderId   Int
 }
