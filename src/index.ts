@@ -4,8 +4,7 @@ import { prisma } from "./lib/prisma";
 import multer from 'multer'
 import path from 'path'
 import cors from 'cors'
-
-
+import session from 'express-session'
 
 const app: Express = express();
 const PORT = 3000;
@@ -15,6 +14,16 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }))
+app.use(session({
+    secret: 'thisisasecret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: false
+    }
+}))
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
