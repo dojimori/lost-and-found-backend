@@ -13,7 +13,11 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "6.19",
+    "@types/cors": "^2.8.19",
+    "@types/multer": "^2.0.0",
+    "cors": "^2.8.5",
     "express": "^5.2.1",
+    "multer": "^2.0.2",
     "prisma": "6.19"
   },
   "devDependencies": {
