@@ -8,11 +8,11 @@ export const register = async (req: Request, res: Response) => {
         const { name, email, password, confirmPassword } = req.body;
 
         if (!name || !email || !password || !confirmPassword) {
-            return res.status(409).json({ message: 'Please fill in missing fields.' });
+            return res.status(400).json({ message: 'Please fill in missing fields.' });
         }
 
         if (password != confirmPassword) {
-            return res.status(409).json({ message: 'Password does not match.' });
+            return res.status(400).json({ message: 'Password does not match.' });
         }
 
         // check if the email already existed
@@ -41,4 +41,22 @@ export const register = async (req: Request, res: Response) => {
     }
 
 
-} 
+}
+
+export const login = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Please fill in missing fields.' });
+        }
+
+
+
+
+
+    } catch (error) {
+        console.log(error)
+    }
+
+
+}
