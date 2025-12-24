@@ -67,7 +67,11 @@ export const login = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        (req.session as any).user = user;
+        (req.session as any).user = {
+            id: user.id,
+            email: user.email,
+            name: user.name
+        };
 
         return res.status(200).json({ message: 'Login successfully.' });
 
