@@ -50,9 +50,26 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'Please fill in missing fields.' });
         }
 
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        })
 
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
 
+        // compare password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
 
+        if (!isPasswordValid) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        (req.session as any).user = user;
+
+        return res.status(200).json({ message: 'Login successfully.' });
 
     } catch (error) {
         console.log(error)
