@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma";
 import bcrypt from 'bcryptjs'
-
+import jwt from 'jsonwebtoken'
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -67,13 +67,14 @@ export const login = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        (req.session as any).user = {
+        const token = jwt.sign({
             id: user.id,
             email: user.email,
             name: user.name
-        };
+        }, 'secrethehe', { expiresIn: '1h' })
 
-        return res.status(200).json({ message: 'Login successfully.' });
+
+        return res.status(200).json({ message: 'Login successfully.', token });
 
     } catch (error) {
         res.status(500).json(error)
