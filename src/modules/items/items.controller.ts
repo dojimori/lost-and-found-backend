@@ -5,6 +5,7 @@ export const index = async (req: Request, res: Response) => {
     try {
         // res.status(200).json({ tempDB });
         const lostItems = await prisma.lostItem.findMany({
+            take: 15,
             include: {
                 founder: true
             }
