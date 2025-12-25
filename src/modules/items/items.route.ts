@@ -1,8 +1,8 @@
 import { Router } from 'express'
-// import { login, register } from './items.controller';
+import { getItems, storeItem } from './items.controller';
 
 const router = Router();
-router.get('/items',);
-router.post('/items',);
+router.get('/items', getItems);
+router.post('/items', storeItem);
 
 export default router;
