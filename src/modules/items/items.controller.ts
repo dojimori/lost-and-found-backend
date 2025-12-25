@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import type { Request, Response } from "express";
 
-export const getItems = async (req: Request, res: Response) => {
+export const index = async (req: Request, res: Response) => {
     try {
         // res.status(200).json({ tempDB });
         const lostItems = await prisma.lostItem.findMany({
@@ -18,7 +18,7 @@ export const getItems = async (req: Request, res: Response) => {
 }
 
 
-export const storeItem = async (req: Request, res: Response) => {
+export const store = async (req: Request, res: Response) => {
     try {
         const { itemName, description } = req.body;
         const file = req.file;
@@ -40,6 +40,26 @@ export const storeItem = async (req: Request, res: Response) => {
         })
 
         res.status(201).json({ message: 'lost item posted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'something went wrong' })
+        console.log(error)
+    }
+}
+
+export const show = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        const item = await prisma.lostItem.findUnique({
+            where: {
+                id
+            },
+            include: {
+                founder: true
+            }
+        });
+
+
+        return res.status(200).send({ item })
     } catch (error) {
         res.status(500).json({ message: 'something went wrong' })
         console.log(error)
