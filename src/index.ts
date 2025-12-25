@@ -6,9 +6,14 @@ import path from 'path'
 import cors from 'cors'
 import session from 'express-session'
 import jwt from 'jsonwebtoken'
+
 // Routes
 import authRoutes from './modules/auth/auth.route'
 // End routes 
+
+// Middlewares 
+import { authMiddleware } from "./middlewares/auth";
+// End middlewares
 
 const app: Express = express();
 const PORT = 3000;
@@ -47,7 +52,7 @@ const upload = multer({ storage })
 app.use('/api/auth', authRoutes)
 
 
-app.get('/api/items', async (req: Request, res: Response) => {
+app.get('/api/items', authMiddleware, async (req: Request, res: Response) => {
     try {
         // res.status(200).json({ tempDB });
         const lostItems = await prisma.lostItem.findMany({
@@ -64,21 +69,12 @@ app.get('/api/items', async (req: Request, res: Response) => {
 })
 
 
-app.post('/api/items', upload.single('image'), async (req: Request, res: Response) => {
+app.post('/api/items', authMiddleware, upload.single('image'), async (req: Request, res: Response) => {
     try {
         // TODO: assign a post to a user (which is the founder of the lost item)
         const { itemName, description } = req.body;
         const file = req.file;
 
-        const header = req.headers.authorization;
-
-        if (!header || !header.startsWith('Bearer')) {
-            return res.status(401).json({ message: 'Unauthorized' }); // 401 Unauthorized
-        }
-
-        const token = header?.split(" ")[1];
-
-        const user = jwt.verify(token, 'secrethehe');
 
         if (!file) {
             return res.status(409).json({ message: 'Image is required' });
@@ -90,7 +86,7 @@ app.post('/api/items', upload.single('image'), async (req: Request, res: Respons
                 description,
                 image: file.filename,
                 founder: {
-                    connect: { id: user.id }
+                    connect: { id: (req as any).user.id }
                 }
             }
         })
