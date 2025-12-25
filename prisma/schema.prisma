@@ -16,7 +16,7 @@ datasource db {
 
 model User {
   // id       String     @id @default(auto()) @map("_id") @db.ObjectId
-  id       Int        @id @default(autoincrement())
+  id       String     @id @default(uuid())
   email    String     @unique
   name     String
   password String
@@ -24,10 +24,10 @@ model User {
 }
 
 model LostItem {
-  id          Int    @id @default(autoincrement())
+  id          String @id @default(uuid())
   name        String
   description String
   image       String
   founder     User   @relation(fields: [founderId], references: [id])
-  founderId   Int
+  founderId   String
 }
