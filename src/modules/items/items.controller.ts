@@ -20,7 +20,6 @@ export const getItems = async (req: Request, res: Response) => {
 
 export const storeItem = async (req: Request, res: Response) => {
     try {
-        // TODO: assign a post to a user (which is the founder of the lost item)
         const { itemName, description } = req.body;
         const file = req.file;
 
