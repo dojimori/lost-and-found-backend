@@ -36,9 +36,7 @@ app.use(session({
 
 // routes
 app.use('/api/auth', authRoutes)
-app.use('/api/items', itemsRoute)
-
-
+app.use('/api/items', authMiddleware, itemsRoute)
 
 app.listen(PORT, () => {
     console.log(`listening now on http://localhost:${PORT}`);
