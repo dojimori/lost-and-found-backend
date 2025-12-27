@@ -7,6 +7,7 @@ import session from 'express-session'
 import authRoutes from './modules/auth/auth.route'
 import itemsRoute from './modules/items/items.route'
 import commentsRoute from './modules/comments/comments.route'
+import claimsRoute from './modules/claims/claims.route'
 // End routes 
 
 // Middlewares 
@@ -38,6 +39,7 @@ app.use(cors({
 app.use('/api/auth', authRoutes)
 app.use('/api/items', authMiddleware, itemsRoute)
 app.use('/api/comments', authMiddleware, commentsRoute)
+app.use('/api/claims', authMiddleware, claimsRoute)
 
 app.listen(PORT, () => {
     console.log(`listening now on http://localhost:${PORT}`);
