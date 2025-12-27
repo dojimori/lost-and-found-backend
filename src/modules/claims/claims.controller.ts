@@ -95,3 +95,38 @@ export const getMyClaimedItems = async (req: Request, res: Response) => {
 
   }
 }
+
+
+
+export const unclaimItem = async (req: Request, res: Response) => {
+  try {
+    // const userId = (req as any).user.id; 
+    const { claimId } = req.body;
+    // const claims = await prisma.claim.findMany({
+    //   where: {
+    //     claimee: { id: userId }
+    //   },
+    //   include: {
+    //     item: {
+    //       include: {
+    //         founder: true
+    //       }
+    //     }
+    //   }
+    // })
+
+    const claim = await prisma.claim.delete({
+      where: {
+        id: claimId
+      }
+    });
+
+    return res
+      .status(200)
+      .json({ message: 'Item unclaimed successfully.' })
+  } catch(error) {
+    console.log(error);
+    return res.status(500).json(error);
+
+  }
+}
