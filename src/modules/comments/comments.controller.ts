@@ -48,11 +48,15 @@ export const index = async(req: Request, res: Response) => {
 export const getComments = async (req: Request, res: Response) => {
   try {
     const comments = await prisma.comment.findMany({
+      take: 12,
       where: {
         postId: req.params.postId  
       },
       include: {
         user: true
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     });
 

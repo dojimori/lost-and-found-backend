@@ -68,4 +68,6 @@ model Claim {
   itemId String
 
   userId String?
+
+  createdAt DateTime @default(now())
 }
