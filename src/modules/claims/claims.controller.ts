@@ -64,7 +64,34 @@ export const claimItem = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "Item claimed! Please wait for the founder's response" });
   } catch (error) {
-    return res.status(500).json(error);
     console.log(error);
+    return res.status(500).json(error);
   }
 };
+
+
+export const getMyClaimedItems = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id; 
+    const claims = await prisma.claim.findMany({
+      where: {
+        claimee: { id: userId }
+      },
+      include: {
+        item: {
+          include: {
+            founder: true
+          }
+        }
+      }
+    })
+
+    return res
+      .status(200)
+      .json(claims)
+  } catch(error) {
+    console.log(error);
+    return res.status(500).json(error);
+
+  }
+}
