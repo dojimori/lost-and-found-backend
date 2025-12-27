@@ -6,7 +6,10 @@ export const claimItem = async (req: Request, res: Response) => {
   try {
     // first is getting the item
     const { postId, message, clue1, clue2, clue3 } = req.body;
-    console.log(req.body);
+
+    if (!postId || !message.trim() ) {
+      return res.status(400).json({ message: "Please fill in missing fields." });
+    }
     const item = await prisma.lostItem.findUnique({
       where: { id: postId },
       include: {
@@ -28,7 +31,12 @@ export const claimItem = async (req: Request, res: Response) => {
     });
 
     if (findClaim) {
-      return res.status(409).json({ message: "You already claimed this item." });
+      return res
+        .status(409)
+        .json({
+          message:
+            "You already claimed this item, please wait for the founder's response.",
+        });
     }
 
     // create
@@ -52,7 +60,9 @@ export const claimItem = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(200).json(claim);
+    return res
+      .status(200)
+      .json({ message: "Item claimed! Please wait for the founder's response" });
   } catch (error) {
     return res.status(500).json(error);
     console.log(error);
