@@ -6,6 +6,7 @@ import session from 'express-session'
 // Routes
 import authRoutes from './modules/auth/auth.route'
 import itemsRoute from './modules/items/items.route'
+import commentsRoute from './modules/comments/comments.route'
 // End routes 
 
 // Middlewares 
@@ -21,22 +22,22 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }))
-app.use(session({
-    secret: 'thisisasecret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        secure: false
-    }
-}))
 
-
+// app.use(session({
+//     secret: 'thisisasecret',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         httpOnly: true,
+//         secure: false
+//     }
+// }))
 
 
 // routes
 app.use('/api/auth', authRoutes)
 app.use('/api/items', authMiddleware, itemsRoute)
+app.use('/api/comments', authMiddleware, commentsRoute)
 
 app.listen(PORT, () => {
     console.log(`listening now on http://localhost:${PORT}`);
