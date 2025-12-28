@@ -5,8 +5,9 @@ import { Request, Response } from 'express'
 export const storeMessage = async(req: Request, res: Response) => {
   try {
     // senderid, receiverid, message
-    const { senderId, receiverId, message } = req.body;
-
+    const { receiverId, message } = req.body;
+    const senderId = (req as any).user.id;
+    
     await prisma.message.create({
       data: {
         message,
@@ -19,7 +20,7 @@ export const storeMessage = async(req: Request, res: Response) => {
       }
     })
 
-    res.status(201).json({ message: "" })
+    res.status(201).json({ message: " message stored " })
   } catch(error) {
     res.status(500).json({ error })
     console.log(error)
@@ -33,16 +34,24 @@ export const getMessages = async(req: Request, res: Response) => {
 
     // const { senderId, receiverId, message } = req.body;
     const receiverId = req.params.id;
-    const userId = (req as any).user.id;
+    const senderId = (req as any).user.id;
 
     const messages = await prisma.message.findMany({
+      take: 12,
       where: {
         sender: {
-          id: receiverId
+          id: senderId
         },
         receiver: {
-          id: userId
-        }
+          id: receiverId
+        },
+      },
+      include: {
+        sender: true,
+        receiver: true
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
 

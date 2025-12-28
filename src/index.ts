@@ -8,6 +8,7 @@ import authRoutes from './modules/auth/auth.route'
 import itemsRoute from './modules/items/items.route'
 import commentsRoute from './modules/comments/comments.route'
 import claimsRoute from './modules/claims/claims.route'
+import messagesRoute from './modules/messages/messages.route'
 // End routes 
 
 // Middlewares 
@@ -40,6 +41,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/items', authMiddleware, itemsRoute)
 app.use('/api/comments', authMiddleware, commentsRoute)
 app.use('/api/claims', authMiddleware, claimsRoute)
+app.use('/api/messages', authMiddleware, messagesRoute)
 
 app.listen(PORT, () => {
     console.log(`listening now on http://localhost:${PORT}`);
