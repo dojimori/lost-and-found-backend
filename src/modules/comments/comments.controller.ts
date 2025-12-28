@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { prisma } from "../../lib/prisma";
 
-export const index = async(req: Request, res: Response) => {
+export const postComment = async(req: Request, res: Response) => {
   try {
     const { content, postId } = req.body;
     const userId = (req as any).user.id;
@@ -19,7 +19,6 @@ export const index = async(req: Request, res: Response) => {
       return res.status(404).json({ message: 'Post not found' })
 
     }
-
 
     // store comment
     await prisma.comment.create({
