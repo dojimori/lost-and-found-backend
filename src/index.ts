@@ -9,6 +9,7 @@ import itemsRoute from './modules/items/items.route'
 import commentsRoute from './modules/comments/comments.route'
 import claimsRoute from './modules/claims/claims.route'
 import messagesRoute from './modules/messages/messages.route'
+import userRoute from './modules/user/user.route'
 // End routes 
 
 // Middlewares 
@@ -38,6 +39,7 @@ app.use(cors({
 
 // routes
 app.use('/api/auth', authRoutes)
+app.use('/api/user', authMiddleware, userRoute)
 app.use('/api/items', authMiddleware, itemsRoute)
 app.use('/api/comments', authMiddleware, commentsRoute)
 app.use('/api/claims', authMiddleware, claimsRoute)

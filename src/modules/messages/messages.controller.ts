@@ -62,7 +62,7 @@ export const getMessages = async (req: Request, res: Response) => {
         receiver: true,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
 
