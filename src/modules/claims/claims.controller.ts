@@ -96,6 +96,29 @@ export const getMyClaimedItems = async (req: Request, res: Response) => {
   }
 }
 
+// get your found items that are claimed to be by others 
+export const getClaimedItems = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id; 
+    const claims = await prisma.claim.findMany({
+      where: {
+        founder: { id: userId }
+      },
+      include: {
+        item: true,
+        claimee: true
+      }
+    })
+
+    return res
+      .status(200)
+      .json(claims)
+
+  } catch(error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+}
 
 
 export const unclaimItem = async (req: Request, res: Response) => {
