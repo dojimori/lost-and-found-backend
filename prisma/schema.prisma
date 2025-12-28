@@ -16,15 +16,17 @@ datasource db {
 
 model User {
   // id       String     @id @default(auto()) @map("_id") @db.ObjectId
-  id            String     @id @default(uuid())
-  email         String     @unique
-  name          String
-  password      String
-  posts         LostItem[]
-  comments      Comment[]
-  founderClaims Claim[]    @relation("founder")
-  claimeeClaims Claim[]    @relation("claimee")
-  claims        Claim[]
+  id               String     @id @default(uuid())
+  email            String     @unique
+  name             String
+  password         String
+  posts            LostItem[]
+  comments         Comment[]
+  founderClaims    Claim[]    @relation("founder")
+  claimeeClaims    Claim[]    @relation("claimee")
+  claims           Claim[]
+  sentMessages     Message[]  @relation("sender")
+  receivedMessages Message[]  @relation("receiver")
 }
 
 model LostItem {
@@ -68,6 +70,19 @@ model Claim {
   itemId String
 
   userId String?
+
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id      String @id @default(uuid())
+  message String
+
+  sender   User   @relation("sender", fields: [senderId], references: [id])
+  senderId String
+
+  receiver   User   @relation("receiver", fields: [receiverId], references: [id])
+  receiverId String
 
   createdAt DateTime @default(now())
 }
