@@ -35,7 +35,7 @@ export const getMessages = async (req: Request, res: Response) => {
     const receiverId = req.params.id;
     const senderId = (req as any).user.id;
 
-    const messages = await prisma.message.findMany({
+    let messages = await prisma.message.findMany({
       take: 12,
       where: {
         OR: [
@@ -62,9 +62,11 @@ export const getMessages = async (req: Request, res: Response) => {
         receiver: true,
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
+
+    messages = messages.reverse();
 
     res.status(201).json({ messages });
   } catch (error) {

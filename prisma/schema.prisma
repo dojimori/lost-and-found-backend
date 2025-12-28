@@ -27,6 +27,7 @@ model User {
   claims           Claim[]
   sentMessages     Message[]  @relation("sender")
   receivedMessages Message[]  @relation("receiver")
+  profiles         Profile[]
 }
 
 model LostItem {
@@ -85,4 +86,25 @@ model Message {
   receiverId String
 
   createdAt DateTime @default(now())
+}
+
+enum Department {
+  CITC
+  COT
+  CEA
+  CSM
+}
+
+model Profile {
+  id             String      @id @default(uuid())
+  profilePicture String?
+  department     Department?
+  moreInfo       String?
+  fbLink         String?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
