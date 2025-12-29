@@ -22,7 +22,7 @@ const PORT = 3000;
 app.use('/public', express.static('uploads'))
 app.use(express.json())
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: '*',
     credentials: true
 }))
 
@@ -45,6 +45,7 @@ app.use('/api/comments', authMiddleware, commentsRoute)
 app.use('/api/claims', authMiddleware, claimsRoute)
 app.use('/api/messages', authMiddleware, messagesRoute)
 
-app.listen(PORT, () => {
-    console.log(`listening now on http://localhost:${PORT}`);
+app.listen(PORT, '10.94.50.70', () => {
+    console.log('Backend running at http://10.94.50.70:3000')
+    // console.log(`listening now on http://localhost:${PORT}`);
 });
