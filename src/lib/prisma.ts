@@ -14,7 +14,7 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
     await prisma.$connect();
-    console.log('mongodb connected')
+    console.log('mysql connected')
 }
 
 main();

@@ -27,7 +27,7 @@ model User {
   claims           Claim[]
   sentMessages     Message[]  @relation("sender")
   receivedMessages Message[]  @relation("receiver")
-  profiles         Profile[]
+  profile          Profile?
 }
 
 model LostItem {
@@ -39,6 +39,7 @@ model LostItem {
   founderId   String
   comments    Comment[]
   claims      Claim[]
+  isFound     Boolean   @default(false)
   createdAt   DateTime  @default(now())
 }
 
@@ -102,9 +103,10 @@ model Profile {
   department     Department?
   moreInfo       String?
   fbLink         String?
+  yearLevel      String?
 
   user   User   @relation(fields: [userId], references: [id])
-  userId String
+  userId String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

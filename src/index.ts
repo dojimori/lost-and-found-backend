@@ -1,7 +1,7 @@
 import express from "express";
-import type { Request, Response, Express } from "express";
+import type { Express } from "express";
 import cors from 'cors'
-import session from 'express-session'
+// import session from 'express-session'
 
 // Routes
 import authRoutes from './modules/auth/auth.route'
@@ -45,7 +45,8 @@ app.use('/api/comments', authMiddleware, commentsRoute)
 app.use('/api/claims', authMiddleware, claimsRoute)
 app.use('/api/messages', authMiddleware, messagesRoute)
 
-app.listen(PORT, '10.94.50.70', () => {
-    console.log('Backend running at http://10.94.50.70:3000')
-    // console.log(`listening now on http://localhost:${PORT}`);
+// app.listen(PORT, '10.94.50.70', () => {
+app.listen(PORT, () => {
+    // console.log('Backend running at http://10.94.50.70:3000')
+    console.log(`listening now on http://localhost:${PORT}`);
 });

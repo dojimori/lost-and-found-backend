@@ -7,7 +7,7 @@ export const claimItem = async (req: Request, res: Response) => {
     // first is getting the item
     const { postId, message, clue1, clue2, clue3 } = req.body;
 
-    if (!postId || !message.trim() ) {
+    if (!postId || !message.trim()) {
       return res.status(400).json({ message: "Please fill in missing fields." });
     }
     const item = await prisma.lostItem.findUnique({
@@ -31,12 +31,9 @@ export const claimItem = async (req: Request, res: Response) => {
     });
 
     if (findClaim) {
-      return res
-        .status(409)
-        .json({
-          message:
-            "You already claimed this item, please wait for the founder's response.",
-        });
+      return res.status(409).json({
+        message: "You already claimed this item, please wait for the founder's response.",
+      });
     }
 
     // create
@@ -69,61 +66,71 @@ export const claimItem = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getMyClaimedItems = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id; 
+    const userId = (req as any).user.id;
     const claims = await prisma.claim.findMany({
       where: {
-        claimee: { id: userId }
+        claimee: { id: userId },
       },
       include: {
         item: {
           include: {
-            founder: true
-          }
-        }
-      }
-    })
+            founder: true,
+          },
+        },
+      },
+    });
 
-    return res
-      .status(200)
-      .json(claims)
-  } catch(error) {
+    const count = await prisma.claim.count({
+      where: {
+        claimee: { id: userId },
+      },
+    });
+
+    return res.status(200).json({
+      claims,
+      count,
+    });
+  } catch (error) {
     console.log(error);
     return res.status(500).json(error);
-
   }
-}
+};
 
-// get your found items that are claimed to be by others 
+// get your found items that are claimed to be by others
 export const getClaimedItems = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id; 
+    const userId = (req as any).user.id;
     const claims = await prisma.claim.findMany({
       where: {
-        founder: { id: userId }
+        founder: { id: userId },
       },
       include: {
         item: true,
-        claimee: true
-      }
-    })
+        claimee: true,
+      },
+    });
 
-    return res
-      .status(200)
-      .json(claims)
+    const count = await prisma.claim.count({
+      where: {
+        founder: { id: userId },
+      },
+    });
 
-  } catch(error) {
+    return res.status(200).json({
+      claims,
+      count,
+    });
+  } catch (error) {
     console.log(error);
     return res.status(500).json(error);
   }
-}
-
+};
 
 export const unclaimItem = async (req: Request, res: Response) => {
   try {
-    // const userId = (req as any).user.id; 
+    // const userId = (req as any).user.id;
     const { claimId } = req.body;
     // const claims = await prisma.claim.findMany({
     //   where: {
@@ -140,16 +147,73 @@ export const unclaimItem = async (req: Request, res: Response) => {
 
     const claim = await prisma.claim.delete({
       where: {
-        id: claimId
+        id: claimId,
+      },
+    });
+
+    return res.status(200).json({ message: "Item unclaimed successfully." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getTotalClaimsCount = async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    const totalClaims = await prisma.claim.count({
+      where: {
+        founder: {
+          id: user.id,
+        },
+      },
+    });
+
+    return res.status(200).json(totalClaims);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+// export const getTotalClaimsCount = async (req: Request, res: Response) => {
+//   try {
+//     const user = (req as any).user;
+//     const totalClaims = await prisma.claim.count({
+//       where: {
+//         founder: {
+//           id: user.id
+//         }
+//       }
+//     })
+
+//     return res.status(200).json(totalClaims)
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json(error);
+//   }
+
+// }
+
+
+export const confirmItem = async (req: Request, res: Response) => {
+  try {
+    const itemId = req.params.id;
+    const item = await prisma.lostItem.update({
+      where: {
+        id: itemId
+      },
+      data: {
+        isFound: true
       }
     });
 
-    return res
-      .status(200)
-      .json({ message: 'Item unclaimed successfully.' })
-  } catch(error) {
-    console.log(error);
-    return res.status(500).json(error);
 
+    return res.status(200).json({
+      message: "Item successfully claimed."
+    })
+
+  } catch (error) {
+    res.status(500).send(error)
   }
 }
